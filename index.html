@@ -1,141 +1,28 @@
 <html>
-    <style>
-        .grid{
-            border:solid 1px #ccc;
-            width: 64px;
-            height: 64px;
-            background: #e6e6e6;
-            display: inline-block;
-            margin: 5px;
-        }
-        .grid.active {
-            background: green;
-        }
-    </style>
+    <title>Random Click Game</title>
+    <link href="./css/index.css" rel="stylesheet" />
 <body>
-<section>
-    <p>Select Game Level</p>
-    <select id="mySelect" onchange="myFunction()">
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="advance">Advance</option>
-    </select>
-    <p id="level"></p>
-    <p id="score"></p>
-    <div id="gridContainer">
-
-    </div>
-    <button onclick="startGame()">Start</button>
+    <div calss="row">
+    <section class="item">
+        <span>Game Level:</span>
+        <select id="mySelect" onchange="myFunction()">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="advance">Advance</option>
+        </select>
     </section>
-<script>
-    // avoid score update on multiple click of same box
-    function randomClick(){
-        this.level = ''
-        this.activeGrid
-        this.score = 0;
-        this.error = 0;
-        this.gametimer = 5;
-    }
-    randomClick.prototype = {
-        setDefaultLevel(){
-            document.getElementById("level").innerHTML='easy'
-        },
-        updateScore(){
-            this.score = this.score + 1;
-        },
-        updateError(){
-            this.score = this.score - 1;
-        },
-        getgridByLevel(){
-            let gridElemet = '';
-            const gridlength = this.getGridlength();
-            let gridid=0;
-            for(let i=0; i< gridlength; i++){
-                let innerGrid = ''
-                for(let j=0; j< gridlength; j++){
-                    innerGrid +=`<span class="grid" id=${gridid} onclick="handleGridClick(${gridid})"></span>`;
-                    gridid++
-                }
-                gridElemet +=`<div class="innerGrid">${innerGrid} </div>`
-            }
-            document.getElementById("gridContainer").innerHTML = gridElemet;
-        },
-        getGridlength (){
-            switch(this.level){
-                case 'easy':
-                    return 3
-                case 'medium':
-                    return 4
-                case 'advance':
-                    return 6
-                default:
-                    return 3
-            }
-        },
-        gerRandomNum(){
-            switch(this.level){
-                case 'easy': return Math.floor(Math.random() * 9)
-                case 'medium': return Math.floor(Math.random() * 16)
-                case 'medium': return Math.floor(Math.random() * 36)
-                default: return Math.floor(Math.random() * 9)
-            }
-        },
-        setActiveClass(){
-            this.removeActiveClass()
-            const genarateRandomNumber = this.gerRandomNum();
-            var element = document.getElementById(genarateRandomNumber);
-            element && element.classList.add('active');
-            this.activeGrid = genarateRandomNumber;
-        },
-        removeActiveClass(){
-            let element= document.getElementsByClassName('active');
-            if(element.length !==0){
-                element[0].classList.remove('active');
-            }
-        },
-        updatelatestScoreInUI(){
-            let score = document.getElementById('score');
-            score.innerHTML = this.score;
-        },
-        updateGametimer(timer){
-            if(this.gametimer >0){
-                this.gametimer = this.gametimer -1
-            }else{
-                clearInterval(timer);
-                const alertUser = confirm(`Game is over! Your Score is ${this.score}`);
-                if(alertUser){
-                    //startGame();
-                    location.reload();
-                }
-            }
-        }
-    }
-    
-    const rclick = new randomClick();
-    rclick.setDefaultLevel();
-    rclick.getgridByLevel();
-    let timer
-    function startGame(){
-        timer = setInterval(function(){
-            rclick.setActiveClass();
-            rclick.updateGametimer(timer);
-        }, 3000)
-    }
-    function handleGridClick(gridid){
-        if(rclick.activeGrid === gridid){
-            rclick.updateScore()
-        }else{
-            rclick.updateError()
-        }
-        rclick.updatelatestScoreInUI();
-    }
-    function myFunction(){
-        level = document.getElementById("mySelect").value
-        document.getElementById("level").innerHTML = level;
-        rclick.level = level;
-        rclick.getgridByLevel();
-    }
-</script>
+    </div>
+    <div class="row">
+        <p id="score"></p>
+    </div>
+    <div class="row">
+    <section calss="item">
+        <div id="gridContainer">
 
+        </div>
+        <button class="button" onclick="startGame()">Start</button>
+    </section>
+    </div>
+    <script src="./js/index.js"></script>
 </body>
 </html>
