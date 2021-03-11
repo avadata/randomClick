@@ -1,27 +1,30 @@
-.row{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
 .item {
-    padding: 5px;
-    margin: 10px;
-    font-size: 1.5em;
-    text-align: center;
+  padding: 5px;
+  margin: 10px;
+  font-size: 1.5em;
+  text-align: center;
 }
-.button{
-    width: 97%;
-    margin: 12px 5px;
+.button {
+  width: 97%;
+  margin: 12px 5px;
 }
-.grid{
-    border:solid 1px #ccc;
-    width: 64px;
-    height: 64px;
-    background: #e6e6e6;
-    display: inline-block;
-    margin: 5px;
+.grid {
+  border: solid 1px #ccc;
+  width: 64px;
+  height: 64px;
+  background: #e6e6e6;
+  display: inline-block;
+  margin: 5px;
 }
 .grid.active {
-    background: green;
+  background: green;
+}
+.active-score {
+  margin-right: 1rem;
 }

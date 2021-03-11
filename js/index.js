@@ -1,10 +1,14 @@
     // avoid score update on multiple click of same box
+const GRID_ACTIVE_TIME = 2000;
+const GAME_LEVEL_EASY = 'easy';
+const GAME_LEVEL_MEDIUM = 'medium';
+const GAME_LEVEL_ADVANCE = 'advance';
 function randomClick(){
     this.level = ''
     this.activeGrid
     this.score = 0;
     this.error = 0;
-    this.gametimer = 5;
+    this.gametimer = 120;
     this.previous='';
 }
 randomClick.prototype = {
@@ -27,15 +31,15 @@ randomClick.prototype = {
             }
             gridElemet +=`<div class="innerGrid">${innerGrid} </div>`
         }
-        document.getElementById("gridContainer").innerHTML = gridElemet;
+        setDomNodeByID("gridContainer", gridElemet);
     },
     getGridlength (){
         switch(this.level){
-            case 'easy':
+            case GAME_LEVEL_EASY:
                 return 3
-            case 'medium':
+            case GAME_LEVEL_MEDIUM:
                 return 4
-            case 'advance':
+            case GAME_LEVEL_ADVANCE:
                 return 6
             default:
                 return 3
@@ -43,9 +47,9 @@ randomClick.prototype = {
     },
     gerRandomNum(){
         switch(this.level){
-            case 'easy': return Math.floor(Math.random() * 9)
-            case 'medium': return Math.floor(Math.random() * 16)
-            case 'medium': return Math.floor(Math.random() * 36)
+            case GAME_LEVEL_EASY: return Math.floor(Math.random() * 9)
+            case GAME_LEVEL_MEDIUM: return Math.floor(Math.random() * 16)
+            case GAME_LEVEL_ADVANCE: return Math.floor(Math.random() * 36)
             default: return Math.floor(Math.random() * 9)
         }
     },
@@ -63,17 +67,27 @@ randomClick.prototype = {
         }
     },
     updatelatestScoreInUI(){
-        let score = document.getElementById('score');
-        score.innerHTML = this.score;
+        const score = 'Score:'+this.score;
+        setDomNodeByID('score', score );
+    },
+    updateHighestScore(score){
+        const hScore = 'Highest Score:'+score;
+        setDomNodeByID('high-score', hScore );
+    },
+    saveScore(){
+        const previousScore  = localStorage.getItem('score');
+        if(!previousScore || previousScore < this.score){
+            localStorage.setItem('score', this.score);
+        }
     },
     updateGametimer(timer){
         if(this.gametimer >0){
             this.gametimer = this.gametimer -1
         }else{
             clearInterval(timer);
-            const alertUser = confirm(`Game is over! Your Score is ${this.score}`);
+            this.saveScore();
+            const alertUser = confirm(`Game is over! Your score is: ${this.score}`);
             if(alertUser){
-                //startGame();
                 location.reload();
             }
         }
@@ -82,12 +96,17 @@ randomClick.prototype = {
 
 const rclick = new randomClick();
 rclick.getgridByLevel();
+let hScore = localStorage.getItem('score');
+if(hScore){
+    rclick.updateHighestScore(hScore);
+}
 let timer
 function startGame(){
+    document.getElementById("gameLevel").disabled = true;
     timer = setInterval(function(){
         rclick.setActiveClass();
         rclick.updateGametimer(timer);
-    }, 3000)
+    }, GRID_ACTIVE_TIME)
 }
 function handleGridClick(gridid){
     if(rclick.activeGrid === gridid && rclick.previous !== gridid){
@@ -97,8 +116,11 @@ function handleGridClick(gridid){
     }
     rclick.updatelatestScoreInUI();
 }
+function setDomNodeByID(nodeName, content){
+    document.getElementById(nodeName).innerHTML = content;
+}
 function myFunction(){
-    level = document.getElementById("mySelect").value
+    level = document.getElementById("gameLevel").value
     rclick.level = level;
     rclick.getgridByLevel();
 }
